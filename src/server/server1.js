@@ -11,7 +11,18 @@ app.get(`${api}`,(req,res)=>{
         "message":"Server-1"
     })
 })
-app.get(`${api}/user/det`,(req,res)=>{
+app.get("/s1/req/user/check/slow", async (req, res) => {
+    console.log("SERVER 1: SLOW REQUEST STARTED");
+
+    await new Promise(resolve => setTimeout(resolve, 15000));
+
+    console.log("SERVER 1: SLOW REQUEST FINISHED");
+
+    res.status(200).json({
+        message: "Slow response completed"
+    });
+});
+app.get(`${api}/get`,(req,res)=>{
     res.status(200).json({
         "message":"Server-1 userdet"
     })
