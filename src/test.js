@@ -34,18 +34,18 @@ async function testRefill() {
     console.log("========== BURST TEST ==========");
 
     // Empty the initial 100-token bucket
-    await sendRequests(1200);
+    await sendRequests(120);
 
     console.log("\nBucket should now be almost empty.");
 
     console.log("\nWaiting 10 seconds for refill...");
 
-    await new Promise(resolve => setTimeout(resolve, 1000000));
+    await new Promise(resolve => setTimeout(resolve, 10000));
 
     console.log("\n========== REFILL TEST ==========");
 
     // 10 sec × 3 tokens/sec = ~30 tokens
-    await sendRequests(10040);
+    await sendRequests(40);
 }
 
 testRefill();

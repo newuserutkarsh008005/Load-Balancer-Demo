@@ -159,7 +159,6 @@ app.get(`${api}health`, (req, res) => {
     });
 
 });
-
 app.all("/req/user/check/*path", async (req, res) => {
 
     // Reject new requests when shutdown has started
@@ -185,10 +184,12 @@ app.all("/req/user/check/*path", async (req, res) => {
     console.log(mp);
 
     curreq++;
+    let server;
+
 
     try {
 
-        const server = getServer(servers);
+         server = getServer(servers);
 
         if (!server) {
 
@@ -224,13 +225,22 @@ app.all("/req/user/check/*path", async (req, res) => {
         });
 
     } 
-    catch(e){
-server.healthy=false;
-return res.status(502).json({
-        message: "Bad Gateway",
-        ServerId: server.id
-    });
+   catch (e) {
+
+    if (server && (e.code === "ECONNREFUSED" ||
+                   e.code === "ECONNABORTED" ||
+                   e.code === "ETIMEDOUT" ||
+                   !e.response)) {
+
+        server.healthy = false;
     }
+
+    return res.status(502).json({
+        message: "Bad Gateway",
+        ServerId: server?.id ?? null
+    });
+
+}
     finally {
 
         // Always remove request from active count
